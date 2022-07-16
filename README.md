@@ -1,4 +1,4 @@
-# REST APi
+# REST API
     Restful Api
 
     This Project is built with
@@ -12,7 +12,7 @@
 
 ## API Documentation
 ### EndPoints
-### UserController Endpoints
+### UserController EndPoints
     - @route /register
     - @method POST
     - @access PUBLIC
@@ -50,7 +50,7 @@
         current_user} 0r 404 if error ocurred
     
 
-### template End Point
+### template EndPoints
     - @route /template
     - @method POST
     - @access PRIVATE
@@ -88,7 +88,7 @@
         201} 0r 404 if error occured
     
 
-### template/:id EndPoint
+### template/:id EndPoints
     - @route /template/<string:template_id>
     - @method GET
     - @access PRIVATE
