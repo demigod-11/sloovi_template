@@ -150,7 +150,8 @@
     base_url/template/<string:template_id>
 
 
-## License
+## Environment Variable
+    MongoClient = mongodb+srv://Username:Password@cluster0.faczi20.mongodb.net/?retryWrites=true&w=majority
 
 
 
