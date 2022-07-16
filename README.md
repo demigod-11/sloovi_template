@@ -4,7 +4,7 @@
     This Project is built with
     - Python, Flask, MongoDB, JWT
 
-## Dependecies
+## Dependencies
     Modules and versions used are stored in requirements.txt
     the program has no dependency save python >= 3.6
 
