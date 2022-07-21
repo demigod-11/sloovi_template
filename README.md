@@ -1,10 +1,10 @@
-# REST APi
+# REST API
     Restful Api
 
     This Project is built with
     - Python, Flask, MongoDB, JWT
 
-## Dependecies
+## Dependencies
     Modules and versions used are stored in requirements.txt
     the program has no dependency save python >= 3.6
 
@@ -12,7 +12,7 @@
 
 ## API Documentation
 ### EndPoints
-### UserController Endpoints
+### UserController EndPoints
     - @route /register
     - @method POST
     - @access PUBLIC
@@ -50,7 +50,7 @@
         current_user} 0r 404 if error ocurred
     
 
-### template End Point
+### template EndPoints
     - @route /template
     - @method POST
     - @access PRIVATE
@@ -88,7 +88,7 @@
         201} 0r 404 if error occured
     
 
-### template/:id EndPoint
+### template/:id EndPoints
     - @route /template/<string:template_id>
     - @method GET
     - @access PRIVATE
@@ -150,7 +150,8 @@
     base_url/template/<string:template_id>
 
 
-## License
+## Environment Variable
+    MongoClient = mongodb+srv://Username:Password@cluster0.faczi20.mongodb.net/?retryWrites=true&w=majority
 
 
 

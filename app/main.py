@@ -101,6 +101,9 @@ def harsh_password(text):
 def abort_wrong_email(text):
     if '@' not in text:
         abort(400, message="Email is not valid")
+    elif ' ' in text:
+        text.strip()
+        abort_user_exist(text)
 
 def abort_wrong_login(args):
     if not db.user.find_one({'email': args.email}) or db.user.find_one({'email':args.email})['password'] != args.password:
@@ -154,7 +157,10 @@ class template(Resource):
     @marshal_with(resource_fields)
     def get(self):
         id = request.data['id']
-        return [doc for doc in db.templates.find({'id':id})]
+        if db.templates.find({'usable': True}):
+            pass
+        else:
+            return [doc for doc in db.templates.find({'id':id})]
 
     @check_for_token
     def post(self):
@@ -183,7 +189,9 @@ class template_1(Resource):
     @check_for_token
     def delete(self, temp_id):
         abort_template_doesnt_exist(temp_id, request.data['id'])
-        db.templates.delete_one({'_id': ObjectId(temp_id)})
+        unusable = True
+        db.template.update_one({'_id':ObjectId(temp_id)}, {"$set": unusable})
+        # db.templates.delete_one({'_id': ObjectId(temp_id)})
         return Response(status=204)
 
 
