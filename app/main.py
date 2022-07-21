@@ -1,3 +1,4 @@
+from pickle import TRUE
 from tokenize import Token
 from flask import Flask, jsonify, request, Response
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
@@ -101,21 +102,19 @@ def harsh_password(text):
 def abort_wrong_email(text):
     if '@' not in text:
         abort(400, message="Email is not valid")
-    elif ' ' in text:
-        text.strip()
-        abort_user_exist(text)
 
 def abort_wrong_login(args):
     if not db.user.find_one({'email': args.email}) or db.user.find_one({'email':args.email})['password'] != args.password:
         abort(400, message="Invalid email or password")
 
 def abort_user_exist(text):
+    text = text.strip()
     if db.user.find_one({'email': text}):
         abort(400, message="User already exist")
 
 
 def abort_template_doesnt_exist(temp_id, user_id):
-    if not db.templates.find_one({ '_id': ObjectId(temp_id),'id': user_id}):
+    if not db.templates.find_one({ '_id': ObjectId(temp_id),'id': user_id, 'unusable':{'$ne':True}}):
         abort(404, message="Template doesn't exist for user")
 
 def drop_none(args):
@@ -157,10 +156,7 @@ class template(Resource):
     @marshal_with(resource_fields)
     def get(self):
         id = request.data['id']
-        if db.templates.find({'usable': True}):
-            pass
-        else:
-            return [doc for doc in db.templates.find({'id':id})]
+        return [doc for doc in db.templates.find({'id':id, 'unusable':{'$ne': True}})]
 
     @check_for_token
     def post(self):
@@ -183,14 +179,14 @@ class template_1(Resource):
         args = template_put_details.parse_args()
         abort_template_doesnt_exist(temp_id, request.data['id'])
         args = drop_none(args)
-        db.templates.update_one({'_id':ObjectId(temp_id)}, {"$set": args})
+        db.templates.update_one({'_id':ObjectId(temp_id)}, {'$set': args})
         return Response(status=200)
+    
 
     @check_for_token
     def delete(self, temp_id):
         abort_template_doesnt_exist(temp_id, request.data['id'])
-        unusable = True
-        db.template.update_one({'_id':ObjectId(temp_id)}, {"$set": unusable})
+        db.templates.update_many({'_id':ObjectId(temp_id)}, {'$set': {"unusable":True}}, upsert=True)
         # db.templates.delete_one({'_id': ObjectId(temp_id)})
         return Response(status=204)
 
@@ -203,7 +199,3 @@ api.add_resource(login, '/login')
 api.add_resource(template,'/template')
 api.add_resource(template_1,'/template/<string:temp_id>')
 
-
-
-if __name__ == '__main__':
-    app.run(debug = True)
